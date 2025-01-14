@@ -16,11 +16,6 @@ export interface Messages {
 }
 
 
-export type MessageDispatchFunctionArgs<K extends keyof Messages> = Messages[K] extends null ?
-  [K] :
-  [K, Messages[K]]
-
-type MessageDispatchFunction = <K extends keyof Messages> (...args: MessageDispatchFunctionArgs<K>) => void
 
 export type MessageBody<K extends keyof Messages> = {
   type: K
@@ -44,6 +39,17 @@ export interface MessageHandler<K extends keyof Messages> {
   handleMessage(data: Messages[K]): void
 }
 
+
+export type MessageDispatchFunctionArgs<K extends keyof Messages> = Messages[K] extends null ?
+  [K] :
+  [K, Messages[K]]
+
+type MessageDispatchFunction = <K extends keyof Messages> (...args: MessageDispatchFunctionArgs<K>) => void
+
+export interface MessageSender {
+  sendMessage: MessageDispatchFunction
+}
+
 export interface MessageBridge {
   /**
    * 添加一个拦截器.
@@ -51,10 +57,23 @@ export interface MessageBridge {
    * @param handler
    */
   addMessageHandler<K extends keyof Messages>(handler: MessageHandler<K>): void
-  sendMessage: MessageDispatchFunction
+  getMessageSender(): MessageSender
 }
+export const UNDEFINED = '$undefined$'
+
+export type TypeofEnum =
+  | 'undefined'
+  | 'object'
+  | 'boolean'
+  | 'number'
+  | 'bigint'
+  | 'string'
+  | 'symbol'
+  | 'function';
 
 export type Callable = (...args: any[]) => any
+export type RegisterFunction = (func: Callable) => string
+
 export interface MessageBridgeOptions {
   poster: MessagePoster
   /**

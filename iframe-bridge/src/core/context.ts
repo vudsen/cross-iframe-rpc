@@ -2,6 +2,7 @@ import type { Callable, MessageBridge, MessagePoster, Messages } from '@/bridge/
 import MessageBridgeImpl from '../bridge'
 import type { BridgeContext } from './proxy'
 import { isPromise } from '@/util'
+import createMessageBridge from "../bridge";
 
 type PromiseCallback = {
   resolve: (value: any) => void
@@ -23,7 +24,7 @@ export default class DefaultBridgeContext implements BridgeContext {
 
   constructor(delegateTarget: any, poster: MessagePoster) {
     this.delegateTarget = delegateTarget
-    this.bridge = new MessageBridgeImpl({
+    this.bridge = createMessageBridge({
       poster,
       registerFunction: func => {
         const key = this.lastId.toString(10)
@@ -49,12 +50,12 @@ export default class DefaultBridgeContext implements BridgeContext {
         const val = current(...data.args)
         if (isPromise(val)) {
           val.then(r => {
-            this.bridge.sendMessage('invokeResponse', {
+            this.bridge.getMessageSender().sendMessage('invokeResponse', {
               id: data.id,
               data: r
             })
           }).catch(e => {
-            this.bridge.sendMessage('invokeResponse', {
+            this.bridge.getMessageSender().sendMessage('invokeResponse', {
               id: data.id,
               error: e
             })
@@ -89,7 +90,7 @@ export default class DefaultBridgeContext implements BridgeContext {
 
   invoke(args: any[]): Promise<any> {
     const id = this.invokeId++
-    this.bridge.sendMessage('invoke', {
+    this.bridge.getMessageSender().sendMessage('invoke', {
       id,
       path: this.visitStackTrace,
       args,

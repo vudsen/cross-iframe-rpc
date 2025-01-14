@@ -2,6 +2,8 @@
   "compilerOptions": {
     "lib": ["esnext"],
     "target": "esnext",
+    "declaration": true,
+    "declarationDir": "dist/types",
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -11,11 +13,13 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
   "ts-node": {
     "typeCheck": false,
   },
-  "include": ["**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": ["src/**/*.ts"],
 }
