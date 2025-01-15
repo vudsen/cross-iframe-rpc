@@ -1,4 +1,4 @@
-import type { ListenerCallback, MessagePoster } from 'cross-iframe'
+import type { ListenerCallback, MessagePoster } from 'cross-iframe-rpc'
 
 export const createSimpleMessagePoster = () => {
   const msgBoxACallbacks: ListenerCallback[] = []

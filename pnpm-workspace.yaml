@@ -1,4 +1,4 @@
 packages:
-  - cross-iframe
+  - cross-iframe-rpc
   - example
   - tests

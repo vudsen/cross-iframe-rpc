@@ -1,4 +1,4 @@
-import {createBridgePeerClient} from "cross-iframe";
+import {createBridgePeerClient} from "cross-iframe-rpc";
 
 const iframe = document.getElementById('iframe') as HTMLIFrameElement
 createBridgePeerClient({

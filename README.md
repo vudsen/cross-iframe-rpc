@@ -1,1 +1,1 @@
-cross-iframe/README.md
+./cross-iframe-rpc/README.md

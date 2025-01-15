@@ -1,6 +1,6 @@
-# cross-iframe
+# cross-iframe-rpc
 
-[中文文档](/cross-iframe/README-zh.md)
+[中文文档](/cross-iframe-rpc/README-zh.md)
 
 Build a bridge between the iframe and the main window; it allows the iframe to cross-origin invoke functions in the main window.
 Similar to the RPC, but it added callback support. 
@@ -38,7 +38,7 @@ Listen for the `message` event in the main window and iframe, and use `postMessa
 Install dependency:
 
 ```shell
-npm install cross-iframe
+npm install cross-iframe-rpc
 ```
 
 ### 1. Set The Dev Server Port Fixed.
@@ -78,7 +78,7 @@ Create a Html template, and import the page via an iframe([popup-dev.html](/exam
 
 ```ts
 // popup.ts
-import {createBridgePeerClient} from "cross-iframe";
+import {createBridgePeerClient} from "cross-iframe-rpc";
 
 const iframe = document.getElementById('iframe') as HTMLIFrameElement
 createBridgePeerClient({

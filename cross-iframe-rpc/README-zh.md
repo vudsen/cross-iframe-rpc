@@ -1,4 +1,4 @@
-# cross-iframe
+# cross-iframe-rpc
 
 为 iframe 和主窗口建立"桥梁"，让 iframe 可以跨域调用主窗口的代码，类似于 RPC 调用, 但添加了回调支持.
 
@@ -33,7 +33,7 @@
 安装依赖:
 
 ```shell
-npm install cross-iframe
+npm install cross-iframe-rpc
 ```
 
 ### 1. 固定开发服务器端口
@@ -73,7 +73,7 @@ export default defineConfig({
 
 ```ts
 // popup.ts
-import {createBridgePeerClient} from "cross-iframe";
+import {createBridgePeerClient} from "cross-iframe-rpc";
 
 const iframe = document.getElementById('iframe') as HTMLIFrameElement
 createBridgePeerClient({

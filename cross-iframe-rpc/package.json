@@ -1,5 +1,5 @@
 {
-  "name": "cross-iframe",
+  "name": "cross-iframe-rpc",
   "version": "1.0.0",
   "description": "A tool to help you develop a Chrome Extension page using your web dev server!",
   "main": "dist/index.js",
@@ -11,7 +11,7 @@
   },
   "keywords": ["Chrome Extension", "iframe", "chrome", "develop", "brige"],
   "author": "IceOfSummer",
-  "homepage": "https://github.com/IceOfSummer/cross-iframe",
+  "homepage": "https://github.com/IceOfSummer/cross-iframe-rpc",
   "license": "ISC",
   "devDependencies": {
     "@eslint/js": "^9.18.0",
