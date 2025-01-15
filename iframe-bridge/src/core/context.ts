@@ -13,6 +13,7 @@ export default class DefaultBridgeContext implements BridgeContext {
   private delegateTarget: Record<string | symbol, any>
   private visitStackTrace: Array<string | symbol> = []
   private funcMapping = new Map<string, Callable>()
+  private funcMappingToId = new Map<Callable, string>()
   private pendingPromise = new Map<number, PromiseCallback>()
   private lastId = 1
   private invokeId = 0
@@ -24,9 +25,14 @@ export default class DefaultBridgeContext implements BridgeContext {
     this.bridge = createMessageBridge({
       poster,
       registerFunction: func => {
+        const cached = this.funcMappingToId.get(func)
+        if (cached) {
+          return cached
+        }
         const key = this.lastId.toString(10)
         this.lastId++
         this.funcMapping.set(key, func)
+        this.funcMappingToId.set(func, key)
 
         return key
       }

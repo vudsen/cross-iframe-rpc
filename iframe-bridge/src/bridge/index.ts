@@ -1,4 +1,5 @@
 import type {
+  Callable,
   ListenerCallback,
   MessageBody,
   MessageBridge,
@@ -13,14 +14,22 @@ import createMessageSender from '@/bridge/sender'
 const createMessageBridge = (options: MessageBridgeOptions): MessageBridge => {
   const serializer = createMessageSerializer(options)
   const sender = createMessageSender(options.poster, serializer)
+  const peerCallbackCache = new Map<string, Callable>()
+
   const deserializer = createMessageDeserializer({
     generateCallback: (peerId) => {
-      return (...args: any[]) => {
+      const cached = peerCallbackCache.get(peerId)
+      if (cached) {
+        return cached
+      }
+      const func =  (...args: any[]) => {
         sender.sendMessage('invokeById', {
           id: peerId,
           args
         })
       }
+      peerCallbackCache.set(peerId, func)
+      return func
     }
   })
   const handlerMap = new Map<keyof Messages, MessageHandler<any>>()

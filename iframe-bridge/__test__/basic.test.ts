@@ -91,3 +91,19 @@ test('Test callback', (done) => {
     done()
   }, val)
 })
+
+test('Test remove listener', () => {
+  const { posterA: server, posterB: client  } = createSimpleMessagePoster()
+  const fn = jest.fn()
+
+  const { posterA, posterB } = createSimpleMessagePoster()
+
+  createBridgePeerClient(server, posterA)
+  const iframe = createBridePeerClientWithTypeOnly<typeof server>(posterB)
+
+  iframe.addEventListener('message', fn)
+  client.postMessage('')
+  iframe.removeEventListener('message', fn)
+  client.postMessage('')
+  expect(fn).toBeCalledTimes(1)
+})
