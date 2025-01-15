@@ -217,18 +217,11 @@ class DefaultBridgeContext {
         this.bridge.addMessageHandler({
             type: 'invoke',
             handleMessage: (data) => {
-                const full = data.path.join('.')
-                let val
-                if (full === 'runtime.onMessage.addListener') {
-                    val = chrome.runtime.onMessage.addListener(...data.args);
-                } else {
-                    let current = this.delegateTarget;
-                    for (const p of data.path) {
-                        current = current[p];
-                    }
-                    console.log(full)
-                    val = current(...data.args);
+                let current = this.delegateTarget();
+                for (const p of data.path) {
+                    current = current[p];
                 }
+                const val = current(...data.args);
                 if (isPromise(val)) {
                     val.then(r => {
                         this.bridge.getMessageSender().sendMessage('invokeResponse', {
@@ -287,8 +280,9 @@ const createBridgePeerClient = (val, poster) => {
     return createProxy(val, ctx);
 };
 const createBridePeerClientWithTypeOnly = (poster) => {
-    const ctx = new DefaultBridgeContext({}, poster);
+    const ctx = new DefaultBridgeContext(() => { }, poster);
     return createProxy({}, ctx);
 };
 
 export { createBridePeerClientWithTypeOnly, createBridgePeerClient };
+//# sourceMappingURL=index.js.map

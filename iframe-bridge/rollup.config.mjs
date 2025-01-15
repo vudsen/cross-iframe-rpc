@@ -2,25 +2,35 @@ import typescript from '@rollup/plugin-typescript'
 import { defineConfig } from 'rollup'
 import dts from 'rollup-plugin-dts'
 import del from 'rollup-plugin-delete'
-import aliasPlugin from '@rollup/plugin-alias'
+import alias from '@rollup/plugin-alias'
+import * as path from 'node:path'
+import copy from 'rollup-plugin-copy'
 
-const alias = aliasPlugin({
-  entries: [
-    {
-      find: /@\/(.*)/, replacement: './$1'
-    }
-  ]
-})
 export default defineConfig([
   {
     input: ['src/index.ts'],
     output: {
       dir: 'dist',
       format: 'es',
+      sourcemap: true,
     },
     plugins: [
       typescript(),
-      alias
+      alias({
+        entries: [
+          {
+            find: /@\/(.*)/, replacement: './$1'
+          }
+        ]
+      }),
+      process.env.UPDATE_EXAMPLE === 'true' ? copy({
+        verbose: true,
+        targets: [
+          { src: 'dist/index.js', dest: '../example/extension/lib/' },
+          { src: 'dist/index.js.map', dest: '../example/extension/lib/' }
+        ],
+        hook: 'buildEnd'
+      }) : undefined
     ],
   },
   {
@@ -30,7 +40,13 @@ export default defineConfig([
       format: 'esm',
     },
     plugins: [
-      alias,
+      alias({
+        entries: [
+          {
+            find: /@\/(.*)/, replacement: path.resolve('./dist/types') + '/$1'
+          }
+        ]
+      }),
       dts(),
       del({
         targets: 'dist/types',
@@ -38,5 +54,5 @@ export default defineConfig([
         verbose: true,
       }),
     ],
-  }
+  },
 ])

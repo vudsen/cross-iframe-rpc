@@ -58,7 +58,7 @@ test('Test basic invoke', async () => {
 
   const { posterA,posterB } = createSimpleMessagePoster()
 
-  createBridgePeerClient(remoteObj, posterA)
+  createBridgePeerClient(() => remoteObj, posterA)
   const iframe = createBridePeerClientWithTypeOnly<typeof remoteObj>(posterB)
 
   await Promise.all([
@@ -82,7 +82,7 @@ test('Test callback', (done) => {
   }
 
   const { posterA,posterB } = createSimpleMessagePoster()
-  createBridgePeerClient(remoteObj, posterA)
+  createBridgePeerClient(() => remoteObj, posterA)
   const iframe = createBridePeerClientWithTypeOnly<typeof remoteObj>(posterB)
 
   const val = 'hello'

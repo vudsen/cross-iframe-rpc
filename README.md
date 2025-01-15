@@ -32,7 +32,8 @@
 > [!CAUTION]
 > 目前无法保证所有 API 都可以通过该方式间接调用，请尽量只在开发环境中使用。
 > 
-> 在生产时，将 `process.env.NODE_ENV` 设置为 `production`后，该库将会直接调用 chrome API，而不是间接调用。
+> 在打包时，将 `process.env.NODE_ENV` 设置为 `production`，该库将会直接调用 chrome API，而不是间接调用。
+
+🚧🚧 项目仍在开发中 🚧🚧
 
 
-TODO

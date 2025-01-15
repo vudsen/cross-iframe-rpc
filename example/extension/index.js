@@ -1,8 +1,8 @@
-import {createBridgePeerClient} from './bridge.js'
+import {createBridgePeerClient} from './lib/index.js'
 
 window.onload = () => {
   const iframe = document.getElementById('iframe')
-  createBridgePeerClient(chrome, {
+  createBridgePeerClient(() => window.chrome, {
     postMessage(str) {
       iframe.contentWindow.postMessage(str, '*')
     },
