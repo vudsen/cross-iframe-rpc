@@ -2,28 +2,38 @@ import type { Callable, MessageBridge, MessagePoster, Messages } from '@/bridge/
 import type { BridgeContext } from './proxy'
 import { isPromise } from '@/util'
 import createMessageBridge from '../bridge'
+import QuickLRU from 'quick-lru'
 
 type PromiseCallback = {
   resolve: (value: any) => void
   reject: (reason: any) => void
 }
 
+
+type DefaultBridgeContextOptions = {
+  delegateTarget: any,
+  poster: MessagePoster
+  maxFunctionCacheSize?: number
+}
+
 export default class DefaultBridgeContext implements BridgeContext {
 
   private delegateTarget: Record<string | symbol, any>
   private visitStackTrace: Array<string | symbol> = []
-  private funcMapping = new Map<string, Callable>()
-  private funcMappingToId = new Map<Callable, string>()
+  // 不能直接使用 WeakMap，回调一般由远程的窗口保持强引用，自己本地是没有强引用的，所以可能导致本地的回调被回收
+  private funcMapping
+  private funcMappingToId = new WeakMap<Callable, string>()
   private pendingPromise = new Map<number, PromiseCallback>()
   private lastId = 1
   private invokeId = 0
   private bridge: MessageBridge
 
 
-  constructor(delegateTarget: any, poster: MessagePoster) {
-    this.delegateTarget = delegateTarget
+  constructor(options: DefaultBridgeContextOptions) {
+    this.delegateTarget = options.delegateTarget
+    this.funcMapping = new QuickLRU<string, Callable>({ maxSize: options.maxFunctionCacheSize ?? 50 })
     this.bridge = createMessageBridge({
-      poster,
+      poster: options.poster,
       registerFunction: func => {
         const cached = this.funcMappingToId.get(func)
         if (cached) {
@@ -40,7 +50,11 @@ export default class DefaultBridgeContext implements BridgeContext {
     this.bridge.addMessageHandler({
       type: 'invokeById',
       handleMessage: (data: Messages['invokeById']) =>{
-        this.funcMapping.get(data.id)?.(...data.args)
+        const func = this.funcMapping.get(data.id)
+        if (!func) {
+          throw new Error('TODO')
+        }
+        func(...data.args)
       }
     })
     this.bridge.addMessageHandler({

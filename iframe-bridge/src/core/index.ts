@@ -3,14 +3,28 @@ import DefaultBridgeContext from './context'
 import type { MessagePoster } from '../bridge/type'
 
 
-
-export const createBridgePeerClient = <T> (val: T, poster: MessagePoster) => {
-  const ctx = new DefaultBridgeContext(val, poster)
-  return createProxy(val, ctx)
+export type ClientOptions<T> = {
+  target: T,
+  poster: MessagePoster,
+  maxFunctionCacheSize?: number,
 }
 
-export const createBridePeerClientWithTypeOnly = <T> (poster: MessagePoster): T => {
-  const ctx = new DefaultBridgeContext({}, poster)
+export const createBridgePeerClient = <T> (options: ClientOptions<T>) => {
+  const ctx = new DefaultBridgeContext({
+    delegateTarget: options.target,
+    ...options,
+  })
+  return createProxy({}, ctx)
+}
+
+/**
+ * 仅提供类型进行创建
+ * @param options
+ */
+export const createBridePeerClientWithTypeOnly = <T> (options: Omit<ClientOptions<T>, 'target'>): T => {
+  const ctx = new DefaultBridgeContext({
+    delegateTarget: {},
+    ...options,
+  })
   return createProxy({}, ctx) as T
 }
-

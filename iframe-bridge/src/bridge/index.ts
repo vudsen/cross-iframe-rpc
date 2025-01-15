@@ -11,14 +11,19 @@ import createMessageSerializer from './serializer'
 import createMessageDeserializer from '@/bridge/deserializer'
 import createMessageSender from '@/bridge/sender'
 
+type MyWeakKey = {
+  id: string
+}
+
 const createMessageBridge = (options: MessageBridgeOptions): MessageBridge => {
   const serializer = createMessageSerializer(options)
   const sender = createMessageSender(options.poster, serializer)
-  const peerCallbackCache = new Map<string, Callable>()
+  const peerCallbackCache = new WeakMap<MyWeakKey, Callable>()
 
   const deserializer = createMessageDeserializer({
     generateCallback: (peerId) => {
-      const cached = peerCallbackCache.get(peerId)
+      const key = { id: peerId }
+      const cached = peerCallbackCache.get(key)
       if (cached) {
         return cached
       }
@@ -28,7 +33,7 @@ const createMessageBridge = (options: MessageBridgeOptions): MessageBridge => {
           args
         })
       }
-      peerCallbackCache.set(peerId, func)
+      peerCallbackCache.set(key, func)
       return func
     }
   })

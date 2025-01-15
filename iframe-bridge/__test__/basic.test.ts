@@ -58,8 +58,13 @@ test('Test basic invoke', async () => {
 
   const { posterA,posterB } = createSimpleMessagePoster()
 
-  createBridgePeerClient(remoteObj, posterA)
-  const iframe = createBridePeerClientWithTypeOnly<typeof remoteObj>(posterB)
+  createBridgePeerClient({
+    poster: posterA,
+    target: remoteObj
+  })
+  const iframe = createBridePeerClientWithTypeOnly<typeof remoteObj>({
+    poster: posterB,
+  })
 
   await Promise.all([
     iframe.nested.method().then(() => {
@@ -82,8 +87,13 @@ test('Test callback', (done) => {
   }
 
   const { posterA,posterB } = createSimpleMessagePoster()
-  createBridgePeerClient(remoteObj, posterA)
-  const iframe = createBridePeerClientWithTypeOnly<typeof remoteObj>(posterB)
+  createBridgePeerClient({
+    poster: posterA,
+    target: remoteObj
+  })
+  const iframe = createBridePeerClientWithTypeOnly<typeof remoteObj>({
+    poster: posterB,
+  })
 
   const val = 'hello'
   iframe.callback(s => {
@@ -98,8 +108,13 @@ test('Test remove listener', () => {
 
   const { posterA, posterB } = createSimpleMessagePoster()
 
-  createBridgePeerClient(server, posterA)
-  const iframe = createBridePeerClientWithTypeOnly<typeof server>(posterB)
+  createBridgePeerClient({
+    poster: posterA,
+    target: server
+  })
+  const iframe = createBridePeerClientWithTypeOnly<typeof server>({
+    poster: posterB,
+  })
 
   iframe.addEventListener('message', fn)
   client.postMessage('')
