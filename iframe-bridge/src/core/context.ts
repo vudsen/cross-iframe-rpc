@@ -8,11 +8,9 @@ type PromiseCallback = {
   reject: (reason: any) => void
 }
 
-export type ValueGetter<T> = () => T
-
 export default class DefaultBridgeContext implements BridgeContext {
 
-  private delegateTarget: ValueGetter<any>
+  private delegateTarget: Record<string | symbol, any>
   private visitStackTrace: Array<string | symbol> = []
   private funcMapping = new Map<string, Callable>()
   private pendingPromise = new Map<number, PromiseCallback>()
@@ -21,7 +19,7 @@ export default class DefaultBridgeContext implements BridgeContext {
   private bridge: MessageBridge
 
 
-  constructor(delegateTarget: ValueGetter<any>, poster: MessagePoster) {
+  constructor(delegateTarget: any, poster: MessagePoster) {
     this.delegateTarget = delegateTarget
     this.bridge = createMessageBridge({
       poster,
@@ -42,11 +40,13 @@ export default class DefaultBridgeContext implements BridgeContext {
     this.bridge.addMessageHandler({
       type: 'invoke',
       handleMessage: (data: Messages['invoke']) => {
-        let current = this.delegateTarget()
+        let current = this.delegateTarget
+        let last = null
         for (const p of data.path) {
+          last = current
           current = current[p]
         }
-        const val = current(...data.args)
+        const val = current.apply(last, data.args)
         if (isPromise(val)) {
           val.then(r => {
             this.bridge.getMessageSender().sendMessage('invokeResponse', {

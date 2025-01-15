@@ -217,11 +217,13 @@ class DefaultBridgeContext {
         this.bridge.addMessageHandler({
             type: 'invoke',
             handleMessage: (data) => {
-                let current = this.delegateTarget();
+                let current = this.delegateTarget;
+                let last = null;
                 for (const p of data.path) {
+                    last = current;
                     current = current[p];
                 }
-                const val = current(...data.args);
+                const val = current.apply(last, data.args);
                 if (isPromise(val)) {
                     val.then(r => {
                         this.bridge.getMessageSender().sendMessage('invokeResponse', {
@@ -280,7 +282,7 @@ const createBridgePeerClient = (val, poster) => {
     return createProxy(val, ctx);
 };
 const createBridePeerClientWithTypeOnly = (poster) => {
-    const ctx = new DefaultBridgeContext(() => { }, poster);
+    const ctx = new DefaultBridgeContext({}, poster);
     return createProxy({}, ctx);
 };
 

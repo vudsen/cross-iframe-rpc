@@ -5,7 +5,7 @@ function sendMsg() {
   } catch (e) {}
   setTimeout(() => {
     sendMsg()
-  }, 3000)
+  }, 1000)
 }
 
 sendMsg();

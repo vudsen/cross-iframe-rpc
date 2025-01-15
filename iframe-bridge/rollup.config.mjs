@@ -29,6 +29,7 @@ export default defineConfig([
           { src: 'dist/index.js', dest: '../example/extension/lib/' },
           { src: 'dist/index.js.map', dest: '../example/extension/lib/' }
         ],
+        force: true,
         hook: 'buildEnd'
       }) : undefined
     ],
