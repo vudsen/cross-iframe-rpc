@@ -28,7 +28,7 @@
 
 ## 快速开始
 
-[演示项目](/example)
+[演示项目](https://github.com/IceOfSummer/cross-iframe-rpc/blob/master/example)
 
 安装依赖:
 
@@ -51,7 +51,7 @@ export default defineConfig({
 
 ### 2. 创建初始化脚本
 
-创建一个 Html 模板，然后通过 iframe 导入页面([popup-dev.html](/example/popup-dev.html)):
+创建一个 Html 模板，然后通过 iframe 导入页面([popup-dev.html](https://github.com/IceOfSummer/cross-iframe-rpc/blob/master/example/popup-dev.html)):
 
 ```html
 <!DOCTYPE html>
@@ -69,7 +69,7 @@ export default defineConfig({
 </html>
 ```
 
-[popup.ts](/example/src/dev/popup.ts):
+[popup.ts](https://github.com/IceOfSummer/cross-iframe-rpc/blob/master/example/src/dev/popup.ts):
 
 ```ts
 // popup.ts
@@ -95,7 +95,7 @@ createBridgePeerClient({
 
 ### 3. 配置开发服务器页面代码
 
-参考 [main.tsx](/example/src/pages/popup/main.tsx):
+参考 [main.tsx](https://github.com/IceOfSummer/cross-iframe-rpc/blob/master/example/src/pages/popup/main.tsx):
 
 ```ts
 if (process.env.NODE_ENV === 'development') {
@@ -122,7 +122,7 @@ if (process.env.NODE_ENV === 'development') {
 
 ### 4. 在开发服务器代码中使用 Chrome API
 
-详见 [App.tsx](/example/src/pages/popup/App.tsx)
+详见 [App.tsx](https://github.com/IceOfSummer/cross-iframe-rpc/blob/master/example/src/pages/popup/App.tsx)
 
 ```ts
 // 没有任何额外步骤，直接使用 API 即可

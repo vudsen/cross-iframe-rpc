@@ -20,5 +20,5 @@ pnpm run prepare:popup
 pnpm run dev
 ```
 
-4. Import the [extension](extension) directory in your browser.
+4. Import the [extension](https://github.com/IceOfSummer/cross-iframe-rpc/tree/master/example/extension) directory in your browser.
 5. Click the extension that you imported

@@ -1,6 +1,6 @@
 # cross-iframe-rpc
 
-[中文文档](/cross-iframe-rpc/README-zh.md)
+[中文文档](https://github.com/IceOfSummer/cross-iframe-rpc/blob/master/cross-iframe-rpc/README-zh.md)
 
 Build a bridge between the iframe and the main window; it allows the iframe to cross-origin invoke functions in the main window.
 Similar to the RPC, but it added callback support. 
@@ -33,7 +33,7 @@ Listen for the `message` event in the main window and iframe, and use `postMessa
 
 ## Quick Start
 
-[Demo Project](/example)
+[Demo Project](https://github.com/IceOfSummer/cross-iframe-rpc/blob/master/example)
 
 Install dependency:
 
@@ -56,7 +56,7 @@ export default defineConfig({
 
 ### 2. Create Basic Template
 
-Create a Html template, and import the page via an iframe([popup-dev.html](/example/popup-dev.html)):
+Create a Html template, and import the page via an iframe([popup-dev.html](https://github.com/IceOfSummer/cross-iframe-rpc/blob/master/example/popup.html)):
 
 ```html
 <!DOCTYPE html>
@@ -74,7 +74,7 @@ Create a Html template, and import the page via an iframe([popup-dev.html](/exam
 </html>
 ```
 
-[popup.ts](/example/src/dev/popup.ts):
+[popup.ts](https://github.com/IceOfSummer/cross-iframe-rpc/blob/master/example/src/dev/popup.ts):
 
 ```ts
 // popup.ts
@@ -99,7 +99,7 @@ createBridgePeerClient({
 
 ### 3. Create Init Script In Dev Server
 
-See [main.tsx](/example/src/pages/popup/main.tsx):
+See [main.tsx](https://github.com/IceOfSummer/cross-iframe-rpc/blob/master/example/src/pages/popup/main.tsx):
 
 ```ts
 if (process.env.NODE_ENV === 'development') {
@@ -126,7 +126,7 @@ This file should be your page entrance. We created a 'client' here; it will comm
 
 ### 4. Use Chrome Api In Your Dev Server Code
 
-See [App.tsx](/example/src/pages/popup/App.tsx)
+See [App.tsx](https://github.com/IceOfSummer/cross-iframe-rpc/blob/master/example/src/pages/popup/App.tsx)
 
 ```ts
 // no additional steps, use chrome directly.
