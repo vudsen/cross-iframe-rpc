@@ -19,9 +19,9 @@ function App() {
       setContentScriptData(message)
     }
     chrome.runtime.onMessage.addListener(cb)
-    // return () => {
-    //   chrome.runtime.onMessage.removeListener(cb)
-    // }
+    return () => {
+      chrome.runtime.onMessage.removeListener(cb)
+    }
   }, [])
 
   return (

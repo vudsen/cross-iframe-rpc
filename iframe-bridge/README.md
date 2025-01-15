@@ -1,38 +1,197 @@
 # iframe-bridge
 
-为 iframe 和主窗口建立"桥梁"，使得 iframe 可以跨域调用主窗口的代码。
+Use the Web Dev Server to develop Chrome extension pages.
 
-## 它可以干什么
+## What can it do?
 
-该项主要目意图是用于 chrome 拓展开发。
+Build a bridge between the iframe and the main window; it allows the iframe to cross-origin invoke functions in the main window.
+Similar to the RPC, but it added callback support. 
+
+The main purpose of this project is to develop a Chrome Extension.
 
 ---
 
-正常情况下，chrome 拓展的代码有两种 组织/编写 方法:
+Generally, we have two ways to develop/organize our code in a Chrome Extension:
 
-- 不借助任何工具，直接编写 
-- 借助 rollup、webpack 等工具打包后编写
+- Without any build tool, write everything yourself.
+- Using `rollup`, `webpack`, etc., to build the code.
 
-对于前者，只适合轻量的拓展。而对于后者，由于 chrome [严格的 CSP 限制](https://developer.chrome.google.cn/docs/extensions/reference/manifest/content-security-policy#extension_pages_policy)，
-导致几乎只能使用 `build` + `watch` 的方式进行开发，这种方式冷启动速度非常慢，而且非常占用性能。
+The first one is a good choice if your extension is light. But for some bigger extensions, it’s better to depend on build tools.
 
-那么能不能借助 vite 等工具启动一个 Web 服务器，然后让拓展页面访问我们的开发服务器呢?
+Because of the [strict CSP limitations](https://developer.chrome.google.cn/docs/extensions/reference/manifest/content-security-policy#extension_pages_policy),
+We could only use `build` + `watch` to develop our extension. It is very slow and has bad performance.
 
-这个想法很不错，但是现实很残酷，google 几乎禁止了这种方式来直接访问外部页面。
+**Why can't we start a web development server through Vite or other tools and let the extension page use our development server? **
 
-在一番研究后，发现可以使用 iframe 来加载外部资源，并且可以完美和 vite 等工具结合。
-不过在 iframe 中无法使用 chrome api, **而这个问题，就是这个库要解决的问题**。
+After some research, I found that an iframe could do this. However,
+we can't access the Chrome API in our iframe, **and that is what our library will do**.
 
-### 原理
+### Theory
 
-在主窗口和 iframe 中监听 `message` 事件，并使用 `postMessage` 来间接调取 API。
+Listen for the `message` event in the main window and iframe, and use `postMessage` to invoke the API indirectly.
 
-## 快速开始
+## Quick Start
 
-> [!CAUTION]
-> 目前无法保证所有 API 都可以通过该方式间接调用，请尽量只在开发环境中使用。
-> 
-> 在生产时，将 `process.env.NODE_ENV` 设置为 `production`后，该库将会直接调用 chrome API，而不是间接调用。
+[Demo Project](/example)
+
+Install dependency:
+
+```shell
+npm install iframe-bridge
+```
+
+### 1. Set The Dev Server Port Fixed.
+
+You have to set your dev server port fixed. For example(Vite):
+
+```ts
+export default defineConfig({
+  server: {
+    port: 17000,
+    strictPort: true
+  },
+})
+```
+
+### 2. Create Basic Template
+
+Create a Html template, and import the page via an iframe:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body style="margin: 0">
+<!-- src is your dev server's page -->
+<iframe style="width: 500px;height: 500px;border:none;" id="iframe" src="http://localhost:17000/popup/popup.html"></iframe>
+<!-- Additional script, check step 3  -->
+<script type="module" src="popup.js"></script>
+</body>
+</html>
+```
+
+### 3. Create Init Script
+
+#### With Build Tool
 
 
-TODO
+If you are using Vite or some other tools, create a file named `popup.js` in the root directory, and import our lib like the [demo](/example/popup-dev.html):
+
+```js
+import {createBridgePeerClient} from "iframe-bridge";
+
+const iframe = document.getElementById('iframe')
+createBridgePeerClient({
+  target: chrome,
+  poster: {
+    postMessage(str) {
+      iframe.contentWindow.postMessage(str, '*')
+    },
+    addEventListener(name, callback) {
+      addEventListener(name, callback)
+    },
+    removeEventListener(name, callback) {
+      removeEventListener(name, callback)
+    }
+  }
+})
+```
+
+#### Without Build Tool
+
+If you don't have any build tool, please copy the `iframe-bridge/dist/index.js` to your project and import it by filename:
+
+```js
+// bridge.js is `iframe-bridge/dist/index.js`
+import {createBridgePeerClient} from "bridge.js";
+
+const iframe = document.getElementById('iframe')
+createBridgePeerClient({
+  target: chrome,
+  poster: {
+    postMessage(str) {
+      iframe.contentWindow.postMessage(str, '*')
+    },
+    addEventListener(name, callback) {
+      addEventListener(name, callback)
+    },
+    removeEventListener(name, callback) {
+      removeEventListener(name, callback)
+    }
+  }
+})
+```
+
+### 4. Create Init Script In Dev Server
+
+See [main.tsx](/example/src/pages/popup/main.tsx):
+
+```ts
+if (process.env.NODE_ENV === 'development') {
+  window.chrome = createBridgePeerClient({
+    target: chrome,
+    poster: {
+      postMessage(str) {
+        window.parent.window.postMessage(str, '*')
+      },
+      addEventListener(name, callback) {
+        window.addEventListener(name, (evt) => {
+          callback(evt)
+        })
+      },
+      removeEventListener(name, callback) {
+        window.removeEventListener(name, callback)
+      }
+    }
+  })
+}
+```
+
+This file should be your page entrance. We created a 'client' here; it will communicate with the outer window.
+
+### 5. Use Chrome Api In Your Dev Server Code
+
+See [App.tsx](/example/src/pages/popup/App.tsx)
+
+```ts
+// no additional steps, use chrome directly.
+const tabs = await chrome.tabs.query({ currentWindow: true, active: true })
+alert('Your current tab url is:\n' + tabs[0].url)
+```
+
+## Limitations
+
+- Only allow function invoke.
+- The type of return value always be `Promise`.
+
+## API
+
+### createBridgePeerClient
+
+Create a peer client.
+
+---
+
+#### Parameters
+
+**target** any
+
+The object that you want to proxy. After you provide this, the corresponding client could invoke the API on this object.
+
+---
+
+**poster** MessagePoster
+
+The events API.
+
+---
+
+**maxFunctionCacheSize** number *Optional*
+
+Max function cache size, default is 50.
+
+Because the lifecycle of the function is uncertain, we could only cache all the functions to avoid being recycled.
+When it reaches this size, the least recently unused function will be removed.
