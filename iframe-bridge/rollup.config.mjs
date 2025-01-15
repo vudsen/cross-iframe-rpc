@@ -4,7 +4,6 @@ import dts from 'rollup-plugin-dts'
 import del from 'rollup-plugin-delete'
 import alias from '@rollup/plugin-alias'
 import * as path from 'node:path'
-import copy from 'rollup-plugin-copy'
 
 export default defineConfig([
   {
@@ -24,16 +23,7 @@ export default defineConfig([
             find: /@\/(.*)/, replacement: './$1'
           }
         ]
-      }),
-      process.env.UPDATE_EXAMPLE === 'true' ? copy({
-        verbose: true,
-        targets: [
-          { src: 'dist/index.js', dest: '../example/extension/lib/' },
-          { src: 'dist/index.js.map', dest: '../example/extension/lib/' }
-        ],
-        force: true,
-        hook: 'buildEnd'
-      }) : undefined
+      })
     ],
   },
   {
@@ -57,5 +47,5 @@ export default defineConfig([
         verbose: true,
       }),
     ],
-  },
+  }
 ])

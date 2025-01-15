@@ -9,12 +9,12 @@ export type ClientOptions<T> = {
   maxFunctionCacheSize?: number,
 }
 
-export const createBridgePeerClient = <T> (options: ClientOptions<T>) => {
+export const createBridgePeerClient = <T> (options: ClientOptions<T>): T => {
   const ctx = new DefaultBridgeContext({
     delegateTarget: options.target,
     ...options,
   })
-  return createProxy({}, ctx)
+  return createProxy({}, ctx) as T
 }
 
 /**
