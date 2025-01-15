@@ -1,4 +1,4 @@
-import type { ListenerCallback, MessagePoster } from '../src/bridge/type'
+import type { ListenerCallback, MessagePoster } from 'iframe-bridge'
 
 export const createSimpleMessagePoster = () => {
   const msgBoxACallbacks: ListenerCallback[] = []

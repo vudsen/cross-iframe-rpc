@@ -1,5 +1,5 @@
 import { expect, jest, test } from '@jest/globals'
-import { createBridgePeerClient, createBridePeerClientWithTypeOnly } from '../src/core'
+import { createBridgePeerClient, createBridePeerClientWithTypeOnly } from 'iframe-bridge'
 import { createSimpleMessagePoster } from './__util__'
 
 // test('Send invoke message from client', (done) => {

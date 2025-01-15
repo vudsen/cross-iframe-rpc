@@ -8,12 +8,14 @@ import copy from 'rollup-plugin-copy'
 
 export default defineConfig([
   {
-    input: ['src/index.ts'],
-    output: {
-      dir: 'dist',
-      format: 'es',
-      sourcemap: true,
-    },
+    input: 'src/index.ts',
+    output: [
+      {
+        file: 'dist/index.js',
+        format: 'es',
+        sourcemap: true,
+      }
+    ],
     plugins: [
       typescript(),
       alias({

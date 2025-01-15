@@ -1,3 +1,4 @@
 packages:
   - iframe-bridge
   - example
+  - tests
