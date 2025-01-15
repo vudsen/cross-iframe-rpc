@@ -1,5 +1,5 @@
 {
-  "name": "iframe-bridge",
+  "name": "cross-iframe",
   "version": "1.0.0",
   "description": "A tool to help you develop a Chrome Extension page using your web dev server!",
   "main": "dist/index.js",
@@ -9,7 +9,7 @@
     "update:example": "cross-env UPDATE_EXAMPLE=true rollup -c",
     "build": "rollup -c"
   },
-  "keywords": ["Chrome Extension", "iframe", "chrome", "develop"],
+  "keywords": ["Chrome Extension", "iframe", "chrome", "develop", "brige"],
   "author": "",
   "license": "ISC",
   "devDependencies": {

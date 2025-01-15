@@ -2,7 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
-import { createBridgePeerClient } from 'iframe-bridge'
+import { createBridgePeerClient } from 'cross-iframe'
 
 if (process.env.NODE_ENV === 'development') {
   window.chrome = createBridgePeerClient({

@@ -1,4 +1,4 @@
 packages:
-  - iframe-bridge
+  - cross-iframe
   - example
   - tests

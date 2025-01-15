@@ -1,14 +1,10 @@
-# iframe-bridge
+# cross-iframe
 
-使用 Web Dev Server 开发 Chrome 拓展页面。
+为 iframe 和主窗口建立"桥梁"，让 iframe 可以跨域调用主窗口的代码，类似于 RPC 调用, 但添加了回调支持.
 
 ## 它可以干什么?
 
-为 iframe 和主窗口建立"桥梁"，让 iframe 可以跨域调用主窗口的代码，类似于 RPC 调用, 但添加了回调支持。
-
-该项主要目意图是用于 chrome 拓展开发。
-
-
+该项主要目意图是用于 chrome 拓展开发。在设置完成后，您可以在 iframe 内部直接调用 chrome API!
 
 ---
 
@@ -24,7 +20,7 @@
 
 **那么能不能借助 vite 等工具启动一个 Web 服务器，然后让拓展页面访问我们的开发服务器呢?**
 
-在一番研究后，发现可以使用 iframe 来完成这个。但是在 iframe 中无法使用 Chrome Api, **而这个问题，就是这个库要解决的问题**。
+在一番研究后，发现可以使用 iframe 来完成这个需求。但是在 iframe 中无法使用 Chrome Api, **而这个问题，就是这个库要解决的问题**。
 
 ### 原理
 
@@ -37,7 +33,7 @@
 安装依赖:
 
 ```shell
-npm install iframe-bridge
+npm install cross-iframe
 ```
 
 ### 1. 固定开发服务器端口
@@ -77,7 +73,7 @@ export default defineConfig({
 
 ```ts
 // popup.ts
-import {createBridgePeerClient} from "iframe-bridge";
+import {createBridgePeerClient} from "cross-iframe";
 
 const iframe = document.getElementById('iframe') as HTMLIFrameElement
 createBridgePeerClient({

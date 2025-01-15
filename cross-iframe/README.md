@@ -1,13 +1,14 @@
-# iframe-bridge
+# cross-iframe
 
-Use the Web Dev Server to develop Chrome extension pages.
-
-## What can it do?
+[中文文档](/cross-iframe/README-zh.md)
 
 Build a bridge between the iframe and the main window; it allows the iframe to cross-origin invoke functions in the main window.
 Similar to the RPC, but it added callback support. 
 
-The main purpose of this project is to develop a Chrome Extension.
+## What can it do?
+
+The main purpose of this project is to develop a Chrome Extension. After everything setup, you can invoke chrome API in 
+your iframe directly!
 
 ---
 
@@ -37,7 +38,7 @@ Listen for the `message` event in the main window and iframe, and use `postMessa
 Install dependency:
 
 ```shell
-npm install iframe-bridge
+npm install cross-iframe
 ```
 
 ### 1. Set The Dev Server Port Fixed.
@@ -77,7 +78,7 @@ Create a Html template, and import the page via an iframe([popup-dev.html](/exam
 
 ```ts
 // popup.ts
-import {createBridgePeerClient} from "iframe-bridge";
+import {createBridgePeerClient} from "cross-iframe";
 
 const iframe = document.getElementById('iframe') as HTMLIFrameElement
 createBridgePeerClient({
