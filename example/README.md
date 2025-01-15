@@ -11,7 +11,7 @@ pnpm install
 2. Build required files:
 
 ```shell
-pnpm run prepare
+pnpm run prepare:popup
 ```
 
 3. Launch dev server:

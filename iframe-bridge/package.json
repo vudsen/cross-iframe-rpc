@@ -1,22 +1,15 @@
 {
   "name": "iframe-bridge",
   "version": "1.0.0",
-  "description": "",
+  "description": "A tool to help you develop a Chrome Extension page using your web dev server!",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
-    },
-    "./browser": {}
-  },
   "scripts": {
     "test": "jest",
     "update:example": "cross-env UPDATE_EXAMPLE=true rollup -c",
     "build": "rollup -c"
   },
-  "keywords": [],
+  "keywords": ["Chrome Extension", "iframe", "chrome", "develop"],
   "author": "",
   "license": "ISC",
   "devDependencies": {

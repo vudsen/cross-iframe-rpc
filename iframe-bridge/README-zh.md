@@ -53,9 +53,9 @@ export default defineConfig({
 })
 ```
 
-### 2. 创建基础模板
+### 2. 创建初始化脚本
 
-创建一个 Html 模板，使用 iframe 引入页面:
+创建一个 Html 模板，然后通过 iframe 导入页面([popup-dev.html](/example/popup-dev.html)):
 
 ```html
 <!DOCTYPE html>
@@ -65,56 +65,26 @@ export default defineConfig({
   <title>Title</title>
 </head>
 <body style="margin: 0">
-<!-- src 指向开发服务器的页面 -->
+<!-- src is your dev server's page -->
 <iframe style="width: 500px;height: 500px;border:none;" id="iframe" src="http://localhost:17000/popup/popup.html"></iframe>
-<!-- 额外的脚本，详见第三步  -->
-<script type="module" src="popup.js"></script>
+<!-- Additional script, check step 3  -->
+<script type="module" src="popup.ts"></script>
 </body>
 </html>
 ```
 
-### 3. 创建初始化脚本
+[popup.ts](/example/src/dev/popup.ts):
 
-#### 借助打包工具
-
-如果你使用了 Vite 等打包工具，创建一个 `pupup.js`，可以直接导入相关的包，并创建初始化代码，就像[演示项目](/example/popup-dev.html)中一样:
-
-```js
+```ts
+// popup.ts
 import {createBridgePeerClient} from "iframe-bridge";
 
-const iframe = document.getElementById('iframe')
+const iframe = document.getElementById('iframe') as HTMLIFrameElement
 createBridgePeerClient({
   target: chrome,
   poster: {
     postMessage(str) {
-      iframe.contentWindow.postMessage(str, '*')
-    },
-    addEventListener(name, callback) {
-      addEventListener(name, callback)
-    },
-    removeEventListener(name, callback) {
-      removeEventListener(name, callback)
-    }
-  }
-})
-```
----
-
-#### 不借助打包工具
-
-如果你没有使用相关工具，可以考虑复制 `iframe-bridge/dist/index.js` 到你的项目中，例如将其复制到根目录的 `bridge.js`。
-
-此时在导入时，直接指定文件名称即可:
-
-```js
-import {createBridgePeerClient} from "bridge.js";
-
-const iframe = document.getElementById('iframe')
-createBridgePeerClient({
-  target: chrome,
-  poster: {
-    postMessage(str) {
-      iframe.contentWindow.postMessage(str, '*')
+      iframe.contentWindow!.postMessage(str, '*')
     },
     addEventListener(name, callback) {
       addEventListener(name, callback)
@@ -126,7 +96,8 @@ createBridgePeerClient({
 })
 ```
 
-### 4. 配置开发服务器页面代码
+
+### 3. 配置开发服务器页面代码
 
 参考 [main.tsx](/example/src/pages/popup/main.tsx):
 
@@ -153,7 +124,7 @@ if (process.env.NODE_ENV === 'development') {
 
 这个文件应该是你开发服务器的入口文件，在这里我们将会创建一个 "客户端", 用于和外层的窗口通信。
 
-### 5. 在开发服务器代码中使用 Chrome API
+### 4. 在开发服务器代码中使用 Chrome API
 
 详见 [App.tsx](/example/src/pages/popup/App.tsx)
 

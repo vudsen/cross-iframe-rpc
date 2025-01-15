@@ -55,7 +55,7 @@ export default defineConfig({
 
 ### 2. Create Basic Template
 
-Create a Html template, and import the page via an iframe:
+Create a Html template, and import the page via an iframe([popup-dev.html](/example/popup-dev.html)):
 
 ```html
 <!DOCTYPE html>
@@ -68,27 +68,23 @@ Create a Html template, and import the page via an iframe:
 <!-- src is your dev server's page -->
 <iframe style="width: 500px;height: 500px;border:none;" id="iframe" src="http://localhost:17000/popup/popup.html"></iframe>
 <!-- Additional script, check step 3  -->
-<script type="module" src="popup.js"></script>
+<script type="module" src="popup.ts"></script>
 </body>
 </html>
 ```
 
-### 3. Create Init Script
+[popup.ts](/example/src/dev/popup.ts):
 
-#### With Build Tool
-
-
-If you are using Vite or some other tools, create a file named `popup.js` in the root directory, and import our lib like the [demo](/example/popup-dev.html):
-
-```js
+```ts
+// popup.ts
 import {createBridgePeerClient} from "iframe-bridge";
 
-const iframe = document.getElementById('iframe')
+const iframe = document.getElementById('iframe') as HTMLIFrameElement
 createBridgePeerClient({
   target: chrome,
   poster: {
     postMessage(str) {
-      iframe.contentWindow.postMessage(str, '*')
+      iframe.contentWindow!.postMessage(str, '*')
     },
     addEventListener(name, callback) {
       addEventListener(name, callback)
@@ -100,32 +96,7 @@ createBridgePeerClient({
 })
 ```
 
-#### Without Build Tool
-
-If you don't have any build tool, please copy the `iframe-bridge/dist/index.js` to your project and import it by filename:
-
-```js
-// bridge.js is `iframe-bridge/dist/index.js`
-import {createBridgePeerClient} from "bridge.js";
-
-const iframe = document.getElementById('iframe')
-createBridgePeerClient({
-  target: chrome,
-  poster: {
-    postMessage(str) {
-      iframe.contentWindow.postMessage(str, '*')
-    },
-    addEventListener(name, callback) {
-      addEventListener(name, callback)
-    },
-    removeEventListener(name, callback) {
-      removeEventListener(name, callback)
-    }
-  }
-})
-```
-
-### 4. Create Init Script In Dev Server
+### 3. Create Init Script In Dev Server
 
 See [main.tsx](/example/src/pages/popup/main.tsx):
 
@@ -152,7 +123,7 @@ if (process.env.NODE_ENV === 'development') {
 
 This file should be your page entrance. We created a 'client' here; it will communicate with the outer window.
 
-### 5. Use Chrome Api In Your Dev Server Code
+### 4. Use Chrome Api In Your Dev Server Code
 
 See [App.tsx](/example/src/pages/popup/App.tsx)
 
