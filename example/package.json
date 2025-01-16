@@ -11,7 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "cross-iframe-rpc": "workspace:*",
+    "cross-iframe-rpc": "latest",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },

@@ -1,5 +1,7 @@
 # Example
 
+![Example](/example/image/example.png)
+
 ## Quick Start
 
 1. Install dependencies:
