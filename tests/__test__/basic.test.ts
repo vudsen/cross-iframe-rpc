@@ -2,25 +2,6 @@ import { expect, jest, test } from '@jest/globals'
 import { createBridgePeerClient, createBridePeerClientWithTypeOnly } from 'cross-iframe-rpc'
 import { createSimpleMessagePoster } from './__util__'
 
-// test('Send invoke message from client', (done) => {
-//   const iframe = document.createElement("iframe");
-//   document.body.appendChild(iframe);
-//   const childWindow = iframe.contentWindow!
-//
-//   const cb = {
-//     nested: {
-//       method: jest.fn()
-//     }
-//   }
-//
-//   addEventListener('message', ev => {
-//     console.log(ev.data)
-//     done()
-//   })
-//
-//   const client = createBridgePeerClient(childWindow.parent)
-//   client.postMessage('123')
-// })
 
 test('Test basic invoke', async () => {
   const testObj = {
@@ -122,3 +103,46 @@ test('Test remove listener', () => {
   client.postMessage('')
   expect(fn).toBeCalledTimes(1)
 })
+
+test('Test multiple bridge', () => {
+  const fnA = jest.fn()
+  const fnB = jest.fn()
+  const apple = {
+    method: () => {
+      fnA()
+    }
+  }
+  const orange: typeof apple = {
+    method: () => {
+      fnB()
+    }
+  }
+  
+  const { posterA, posterB } = createSimpleMessagePoster()
+  
+  createBridgePeerClient({
+    target: apple,
+    poster: posterA,
+    key: 'apple'
+  })
+  const appleClient = createBridePeerClientWithTypeOnly<typeof apple>({
+    poster: posterB,
+    key: 'apple'
+  })
+  
+  createBridgePeerClient({
+    target: orange,
+    poster: posterA,
+    key: 'orange'
+  })
+  const orangeClient = createBridePeerClientWithTypeOnly<typeof orange>({
+    poster: posterB,
+    key: 'orange'
+  })
+  appleClient.method()
+  orangeClient.method()
+  expect(fnA).toBeCalledTimes(1)
+  expect(fnB).toBeCalledTimes(1)
+})
+
+

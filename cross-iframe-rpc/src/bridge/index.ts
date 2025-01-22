@@ -16,8 +16,13 @@ type MyWeakKey = {
 }
 
 const createMessageBridge = (options: MessageBridgeOptions): MessageBridge => {
+  const key = options.key ?? 'Default'
   const serializer = createMessageSerializer(options)
-  const sender = createMessageSender(options.poster, serializer)
+  const sender = createMessageSender({
+    key,
+    serializer: serializer,
+    poster: options.poster
+  })
   const peerCallbackCache = new WeakMap<MyWeakKey, Callable>()
 
   const deserializer = createMessageDeserializer({
@@ -44,7 +49,7 @@ const createMessageBridge = (options: MessageBridgeOptions): MessageBridge => {
       return
     }
     const data = deserializer.deserialize(evt.data) as MessageBody<any>
-    if (data.type) {
+    if (data.type && data.key === options.key) {
       handlerMap.get(data.type)?.handleMessage(data.data)
     }
   }

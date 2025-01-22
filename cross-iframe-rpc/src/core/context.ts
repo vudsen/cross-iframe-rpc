@@ -14,6 +14,7 @@ type DefaultBridgeContextOptions = {
   delegateTarget: any,
   poster: MessagePoster
   maxFunctionCacheSize?: number
+  key: string
 }
 
 export default class DefaultBridgeContext implements BridgeContext {
@@ -33,6 +34,7 @@ export default class DefaultBridgeContext implements BridgeContext {
     this.delegateTarget = options.delegateTarget
     this.funcMapping = new QuickLRU<string, Callable>({ maxSize: options.maxFunctionCacheSize ?? 50 })
     this.bridge = createMessageBridge({
+      key: options.key,
       poster: options.poster,
       registerFunction: func => {
         const cached = this.funcMappingToId.get(func)

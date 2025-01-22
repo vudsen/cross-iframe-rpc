@@ -4,14 +4,21 @@ import type { MessageSerializer } from '@/bridge/serializer'
 
 
 
-const createMessageSender = (poster: MessagePoster, serializer: MessageSerializer): MessageSender => {
+type SenderOptions = {
+  poster: MessagePoster
+  serializer: MessageSerializer
+  key: string
+}
+
+const createMessageSender = (options: SenderOptions): MessageSender => {
   return {
     sendMessage<K extends keyof Messages> (...args: MessageDispatchFunctionArgs<K>) {
       const body: MessageBody<any> = {
         type: args[0],
-        data: args[1]
+        data: args[1],
+        key: options.key
       }
-      poster.postMessage(serializer.serialise(deepCopy(body)))
+      options.poster.postMessage(options.serializer.serialise(deepCopy(body)))
     }
   }
 }
