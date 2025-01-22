@@ -1,4 +1,5 @@
-import createProxy from './proxy'
+import type { BridgeContext } from './proxy'
+import createProxy, { INTERNAL_RESOLVE_CTX_FUNC } from './proxy'
 import DefaultBridgeContext from './context'
 import type { MessagePoster } from '../bridge/type'
 
@@ -30,4 +31,17 @@ export const createBridePeerClientWithTypeOnly = <T> (options: Omit<ClientOption
     ...options,
   })
   return createProxy({}, ctx) as T
+}
+
+/**
+ * 获取属性
+ * @param target 被代理的对象
+ */
+export const accessProperty  = <T> (target: T): Promise<T> => {
+  // @ts-expect-error target is undefined.
+  const ctx = target[INTERNAL_RESOLVE_CTX_FUNC] as BridgeContext
+  if (!ctx) {
+    throw new Error('Not a proxied object!')
+  }
+  return ctx.accessProperty()
 }

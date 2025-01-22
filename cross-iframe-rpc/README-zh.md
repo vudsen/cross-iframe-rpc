@@ -162,3 +162,38 @@ alert('Your current tab url is:\n' + tabs[0].url)
 最大函数缓存数量，默认为 50。
 
 由于回调函数的生命周期并不确定，所以只能全部缓存下来以防被回收。所以这里存在一个最大缓存数量，当超过最大数量时将会清除最久未使用的函数。
+
+
+### accessProperty
+
+访问指定的属性。
+
+---
+
+#### Parameters
+
+**target** object
+
+被代理的对象，详见下面的示例。
+
+#### Example
+
+```typescript
+import { createBridePeerClientWithTypeOnly, accessProperty } from 'cross-iframe-rpc'
+// remote
+const remoteObject = {
+    round: {
+      apple: 'yummy!'
+    }
+}
+
+// client
+const obj = createBridePeerClientWithTypeOnly<typeof remoteObject>({
+  // ...
+})
+
+accessProperty(await accessProperty(obj.round.apple)).then(r => {
+  // yummy!
+  console.log(r)
+})
+```

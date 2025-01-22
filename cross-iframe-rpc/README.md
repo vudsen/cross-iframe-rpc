@@ -167,3 +167,37 @@ Max function cache size, default is 50.
 
 Because the lifecycle of the function is uncertain, we could only cache all the functions to avoid being recycled.
 When it reaches this size, the least recently unused function will be removed.
+
+### accessProperty
+
+Access specific property.
+
+---
+
+#### Parameters
+
+**target** object
+
+Proxied target, see example below for more details.
+
+#### Example
+
+```typescript
+import { createBridePeerClientWithTypeOnly, accessProperty } from 'cross-iframe-rpc'
+// remote
+const remoteObject = {
+    round: {
+      apple: 'yummy!'
+    }
+}
+
+// client
+const obj = createBridePeerClientWithTypeOnly<typeof remoteObject>({
+  // ...
+})
+
+accessProperty(await accessProperty(obj.round.apple)).then(r => {
+  // yummy!
+  console.log(r)
+})
+```

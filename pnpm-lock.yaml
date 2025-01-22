@@ -61,8 +61,8 @@ importers:
   example:
     dependencies:
       cross-iframe-rpc:
-        specifier: latest
-        version: 1.0.1
+        specifier: workspace:*
+        version: link:../cross-iframe-rpc
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -1633,9 +1633,6 @@ packages:
     resolution: {integrity: sha512-+/HKd6EgcQCJGh2PSjZuUitQBQynKor4wrFbRg4DtAgS1aWO+gU52xpH7M9ScGgXSYmAVS9bIJ8EzuaGw0oNAw==}
     engines: {node: '>=10.14', npm: '>=6', yarn: '>=1'}
     hasBin: true
-
-  cross-iframe-rpc@1.0.1:
-    resolution: {integrity: sha512-YKy2lz6DZud/o/dr8W/WB5mS2J6ENzgJRQNt0BfgZqS+3/pc2Vwtb57vCOVgWpWxC4x23REuM6ShATMbt217wA==}
 
   cross-spawn@7.0.6:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
@@ -4378,10 +4375,10 @@ snapshots:
     dependencies:
       '@types/yargs-parser': 21.0.3
 
-  '@typescript-eslint/eslint-plugin@8.20.0(@typescript-eslint/parser@8.20.0(eslint@9.18.0)(typescript@5.7.3))(eslint@9.18.0)(typescript@5.6.3)':
+  '@typescript-eslint/eslint-plugin@8.20.0(@typescript-eslint/parser@8.20.0(eslint@9.18.0)(typescript@5.6.3))(eslint@9.18.0)(typescript@5.6.3)':
     dependencies:
       '@eslint-community/regexpp': 4.12.1
-      '@typescript-eslint/parser': 8.20.0(eslint@9.18.0)(typescript@5.7.3)
+      '@typescript-eslint/parser': 8.20.0(eslint@9.18.0)(typescript@5.6.3)
       '@typescript-eslint/scope-manager': 8.20.0
       '@typescript-eslint/type-utils': 8.20.0(eslint@9.18.0)(typescript@5.6.3)
       '@typescript-eslint/utils': 8.20.0(eslint@9.18.0)(typescript@5.6.3)
@@ -4778,10 +4775,6 @@ snapshots:
   cross-env@7.0.3:
     dependencies:
       cross-spawn: 7.0.6
-
-  cross-iframe-rpc@1.0.1:
-    dependencies:
-      quick-lru: 7.0.0
 
   cross-spawn@7.0.6:
     dependencies:
@@ -6145,7 +6138,7 @@ snapshots:
 
   typescript-eslint@8.20.0(eslint@9.18.0)(typescript@5.6.3):
     dependencies:
-      '@typescript-eslint/eslint-plugin': 8.20.0(@typescript-eslint/parser@8.20.0(eslint@9.18.0)(typescript@5.7.3))(eslint@9.18.0)(typescript@5.6.3)
+      '@typescript-eslint/eslint-plugin': 8.20.0(@typescript-eslint/parser@8.20.0(eslint@9.18.0)(typescript@5.6.3))(eslint@9.18.0)(typescript@5.6.3)
       '@typescript-eslint/parser': 8.20.0(eslint@9.18.0)(typescript@5.6.3)
       '@typescript-eslint/utils': 8.20.0(eslint@9.18.0)(typescript@5.6.3)
       eslint: 9.18.0

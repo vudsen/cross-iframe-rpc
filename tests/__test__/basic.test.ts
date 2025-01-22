@@ -1,6 +1,6 @@
 import { expect, jest, test } from '@jest/globals'
-import { createBridgePeerClient, createBridePeerClientWithTypeOnly } from 'cross-iframe-rpc'
-import { createSimpleMessagePoster } from './__util__'
+import { createBridgePeerClient, createBridePeerClientWithTypeOnly, accessProperty } from 'cross-iframe-rpc'
+import { createClientAndServer, createSimpleMessagePoster } from './__util__'
 
 
 test('Test basic invoke', async () => {
@@ -145,4 +145,14 @@ test('Test multiple bridge', () => {
   expect(fnB).toBeCalledTimes(1)
 })
 
+test('Test property access', async () => {
+  const fruit = {
+    round: {
+      apple: 'yummy!'
+    }
+  }
 
+  const { client } = createClientAndServer(fruit)
+
+  expect(await accessProperty(client.round.apple)).toBe('yummy!')
+})

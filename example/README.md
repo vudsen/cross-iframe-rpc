@@ -1,6 +1,8 @@
 # Example
 
-![Example](/example/image/example.png)
+This project this used for development test, 
+please check [iframe-chrome-extension-template](https://github.com/IceOfSummer/iframe-chrome-extension-template) for user side example. 
+
 
 ## Quick Start
 

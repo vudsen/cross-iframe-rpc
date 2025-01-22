@@ -1,3 +1,4 @@
+// TODO support symbol.
 export interface Messages {
   invoke: {
     id: number
@@ -12,6 +13,14 @@ export interface Messages {
     id: number
     data?: any
     error?: any
+  }
+  accessPropertyRequest: {
+    id: number
+    path: Array<string | symbol>
+  }
+  accessPropertyResponse: {
+    id: number
+    data: any
   }
 }
 

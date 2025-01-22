@@ -100,6 +100,40 @@ export default class DefaultBridgeContext implements BridgeContext {
         }
       }
     })
+    this.bridge.addMessageHandler({
+      type: 'accessPropertyRequest',
+      handleMessage: (data: Messages['accessPropertyRequest']) => {
+        let current = this.delegateTarget
+        for (const visitStackTraceElement of data.path) {
+          current = current[visitStackTraceElement]
+        }
+        this.bridge.getMessageSender().sendMessage('accessPropertyResponse', {
+          id: data.id,
+          data: current
+        })
+      }
+    })
+    this.bridge.addMessageHandler({
+      type: 'accessPropertyResponse',
+      handleMessage: (data: Messages['accessPropertyResponse']) => {
+        const promise = this.pendingPromise.get(data.id)
+        if (promise) {
+          promise.resolve(data.data)
+          this.pendingPromise.delete(data.id)
+        }
+      }
+    })
+  }
+
+  accessProperty() {
+    const id = this.invokeId++
+    return new Promise((resolve, reject) => {
+      this.pendingPromise.set(id, { resolve, reject })
+      this.bridge.getMessageSender().sendMessage('accessPropertyRequest', {
+        id,
+        path: this.visitStackTrace,
+      })
+    })
   }
 
   addAccessTrace(pathName: string | symbol, level: number): void {
@@ -111,13 +145,13 @@ export default class DefaultBridgeContext implements BridgeContext {
 
   invoke(args: any[]): Promise<any> {
     const id = this.invokeId++
-    this.bridge.getMessageSender().sendMessage('invoke', {
-      id,
-      path: this.visitStackTrace,
-      args,
-    })
     return new Promise((resolve, reject) => {
       this.pendingPromise.set(id, { resolve, reject })
+      this.bridge.getMessageSender().sendMessage('invoke', {
+        id,
+        path: this.visitStackTrace,
+        args,
+      })
     })
   }
 
