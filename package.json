@@ -1,6 +1,6 @@
 {
   "name": "cross-iframe-rpc-project",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
   "scripts": {
     "build": "node script/build.mjs",
