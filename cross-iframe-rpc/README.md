@@ -78,22 +78,12 @@ Create a Html template, and import the page via an iframe([popup-dev.html](https
 
 ```ts
 // popup.ts
-import {createBridgePeerClient} from "cross-iframe-rpc";
+import {setupInMainWindow} from "cross-iframe-rpc";
 
 const iframe = document.getElementById('iframe') as HTMLIFrameElement
-createBridgePeerClient({
-  target: chrome,
-  poster: {
-    postMessage(str) {
-      iframe.contentWindow!.postMessage(str, '*')
-    },
-    addEventListener(name, callback) {
-      addEventListener(name, callback)
-    },
-    removeEventListener(name, callback) {
-      removeEventListener(name, callback)
-    }
-  }
+setupInMainWindow({
+  iframe,
+  delegateTarget: chrome,
 })
 ```
 
@@ -102,23 +92,10 @@ createBridgePeerClient({
 See [main.tsx](https://github.com/IceOfSummer/cross-iframe-rpc/blob/master/example/src/pages/popup/main.tsx):
 
 ```ts
+import { setupInIframe } from 'cross-iframe-rpc'
+
 if (process.env.NODE_ENV === 'development') {
-  window.chrome = createBridgePeerClient({
-    target: chrome,
-    poster: {
-      postMessage(str) {
-        window.parent.window.postMessage(str, '*')
-      },
-      addEventListener(name, callback) {
-        window.addEventListener(name, (evt) => {
-          callback(evt)
-        })
-      },
-      removeEventListener(name, callback) {
-        window.removeEventListener(name, callback)
-      }
-    }
-  })
+  window.chrome = setupInIframe<typeof chrome>()
 }
 ```
 
