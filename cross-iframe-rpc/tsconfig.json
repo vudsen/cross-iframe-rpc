@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "lib": ["esnext"],
+    "lib": ["esnext", "DOM", "DOM.Iterable"],
     "target": "esnext",
     "declaration": true,
     "declarationDir": "dist/types",
