@@ -44,11 +44,6 @@ export interface MessagePoster {
   removeEventListener(name: 'message', callback: ListenerCallback): void
 }
 
-export interface MessageHandler<K extends keyof Messages> {
-  type: K
-  handleMessage(data: Messages[K]): void
-}
-
 
 export type MessageDispatchFunctionArgs<K extends keyof Messages> = Messages[K] extends null ?
   [K] :
@@ -66,7 +61,6 @@ export interface MessageBridge {
    * TODO, 同一个消息支持多个handler
    * @param handler
    */
-  addMessageHandler<K extends keyof Messages>(handler: MessageHandler<K>): void
   getMessageSender(): MessageSender
 }
 export const UNDEFINED = '$undefined$'
@@ -100,4 +94,5 @@ export interface MessageBridgeOptions {
    * 最大函数缓存数量
    */
   maxFunctionCacheSize: number
+  onMessage: <T extends keyof Messages>(callback: MessageBody<T>) => void
 }

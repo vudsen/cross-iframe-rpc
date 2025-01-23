@@ -1,7 +1,18 @@
+import type { Callable, MessageBridge } from '@/bridge/type'
+
+export type PromiseCallback = {
+  resolve: (value: any) => void
+  reject: (reason: any) => void
+}
+
 export interface BridgeContext {
   addAccessTrace(pathName: string | symbol, level: number): void
   invoke(args: any[]): Promise<any>
   accessProperty(): Promise<any>
+  getMessageBridge(): MessageBridge
+  getDelegateTarget(): any
+  getFunctionById(id: string): Callable | undefined
+  getAndRemovePendingPromise(id: number): PromiseCallback | undefined
 }
 
 

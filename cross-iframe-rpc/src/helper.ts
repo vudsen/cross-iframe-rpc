@@ -7,6 +7,8 @@ export type SetupInMainWindowOptions<T> = {
 }
 
 export const setupInMainWindow = <T> (options: SetupInMainWindowOptions<T>): T => {
+  // No need to log twice.
+  setLoggerEnabled(false)
   return createBridgePeerClient({
     target: options.delegateTarget,
     poster: {
@@ -26,8 +28,6 @@ export const setupInMainWindow = <T> (options: SetupInMainWindowOptions<T>): T =
 }
 
 export const setupInIframe = <T> (): T => {
-  // No need to log twice.
-  setLoggerEnabled(false)
   return createBridePeerClientWithTypeOnly<T>({
     poster: {
       postMessage(str) {

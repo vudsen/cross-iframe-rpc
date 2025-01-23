@@ -1,14 +1,9 @@
-import type { Callable, MessageBridge, MessagePoster, Messages } from '@/bridge/type'
-import type { BridgeContext } from './proxy'
-import { isPromise } from '@/util'
+import type { Callable, MessageBridge, MessagePoster } from '@/bridge/type'
+import type { BridgeContext, PromiseCallback } from './proxy'
 import createMessageBridge from '../bridge'
 import QuickLRU from 'quick-lru'
-
-type PromiseCallback = {
-  resolve: (value: any) => void
-  reject: (reason: any) => void
-}
-
+import '@/handler/init'
+import { getHandler } from '@/handler/factory'
 
 type DefaultBridgeContextOptions = {
   delegateTarget: any,
@@ -49,82 +44,32 @@ export default class DefaultBridgeContext implements BridgeContext {
         this.funcMappingToId.set(func, key)
 
         return key
+      },
+      onMessage: (msg) => {
+        getHandler(msg.type)(msg.data, this)
       }
     })
-    this.bridge.addMessageHandler({
-      type: 'invokeFunctionByIdRequest',
-      handleMessage: (data: Messages['invokeFunctionByIdRequest']) =>{
-        const func = this.funcMapping.get(data.id)
-        if (!func) {
-          throw new Error('TODO')
-        }
-        func(...data.args)
-      }
-    })
-    this.bridge.addMessageHandler({
-      type: 'invokeRequest',
-      handleMessage: (data: Messages['invokeRequest']) => {
-        let current = this.delegateTarget
-        let last = null
-        for (const p of data.path) {
-          last = current
-          current = current[p]
-        }
-        const val = current.apply(last, data.args)
-        if (isPromise(val)) {
-          val.then(r => {
-            this.bridge.getMessageSender().sendMessage('invokeResponse', {
-              id: data.id,
-              data: r
-            })
-          }).catch(e => {
-            this.bridge.getMessageSender().sendMessage('invokeResponse', {
-              id: data.id,
-              error: e
-            })
-          })
-        }
-      }
-    })
-    this.bridge.addMessageHandler({
-      type: 'invokeResponse',
-      handleMessage: (data: Messages['invokeResponse']) => {
-        const promise = this.pendingPromise.get(data.id)
-        if (promise) {
-          if (data.data) {
-            promise.resolve(data.data)
-          } else if (data.error) {
-            promise.reject(data.data)
-          } else {
-            promise.resolve(data.data)
-          }
-          this.pendingPromise.delete(data.id)
-        }
-      }
-    })
-    this.bridge.addMessageHandler({
-      type: 'accessPropertyRequest',
-      handleMessage: (data: Messages['accessPropertyRequest']) => {
-        let current = this.delegateTarget
-        for (const visitStackTraceElement of data.path) {
-          current = current[visitStackTraceElement]
-        }
-        this.bridge.getMessageSender().sendMessage('accessPropertyResponse', {
-          id: data.id,
-          data: current
-        })
-      }
-    })
-    this.bridge.addMessageHandler({
-      type: 'accessPropertyResponse',
-      handleMessage: (data: Messages['accessPropertyResponse']) => {
-        const promise = this.pendingPromise.get(data.id)
-        if (promise) {
-          promise.resolve(data.data)
-          this.pendingPromise.delete(data.id)
-        }
-      }
-    })
+  }
+
+  getAndRemovePendingPromise(id: number): PromiseCallback | undefined {
+    const promise = this.pendingPromise.get(id)
+    if (!promise) {
+      return
+    }
+    this.pendingPromise.delete(id)
+    return promise
+  }
+
+  getFunctionById(id: string): Callable | undefined {
+    return this.funcMapping.get(id)
+  }
+
+  getDelegateTarget() {
+    return this.delegateTarget
+  }
+
+  getMessageBridge(): MessageBridge {
+    return this.bridge
   }
 
   accessProperty() {

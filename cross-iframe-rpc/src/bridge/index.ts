@@ -4,8 +4,7 @@ import type {
   MessageBody,
   MessageBridge,
   MessageBridgeOptions,
-  MessageHandler,
-  Messages, MessageSender
+  MessageSender
 } from './type'
 import createMessageSerializer from './serializer'
 import createMessageDeserializer from '@/bridge/deserializer'
@@ -40,7 +39,6 @@ const createMessageBridge = (options: MessageBridgeOptions): MessageBridge => {
       return func
     }
   })
-  const handlerMap = new Map<keyof Messages, MessageHandler<any>>()
    
   const listenerCallback: ListenerCallback = (evt) => {
     if (typeof evt.data !== 'string') {
@@ -49,16 +47,13 @@ const createMessageBridge = (options: MessageBridgeOptions): MessageBridge => {
     const data = deserializer.deserialize(evt.data) as MessageBody<any>
     info('RECEIVE', data)
     if (data.type && data.key === options.key) {
-      handlerMap.get(data.type)?.handleMessage(data.data)
+      options.onMessage(data)
     }
   }
   // TODO remove listener.
   options.poster.addEventListener('message', listenerCallback)
-  
+
   return {
-    addMessageHandler<K extends keyof Messages>(handler: MessageHandler<K>) {
-      handlerMap.set(handler.type, handler)
-    },
     getMessageSender(): MessageSender {
       return sender
     }
