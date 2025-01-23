@@ -156,3 +156,42 @@ test('Test property access', async () => {
 
   expect(await accessProperty(client.round.apple)).toBe('yummy!')
 })
+
+
+test('Test callback remove', async () => {
+  type Listener = () => void
+
+  function createRemoteObj() {
+    let listener: Listener | undefined
+    return {
+      addListener: (lis: Listener) => {
+        listener = lis
+      },
+      removeListener: (lis: Listener) => {
+        if (lis === listener) {
+          listener = undefined
+        }
+      },
+      getListener: () => {
+        return listener
+      },
+      invokeListener: () => {
+        listener?.()
+      }
+    }
+  }
+  const remote = createRemoteObj()
+  const { client } = createClientAndServer(remote)
+
+  const fn = jest.fn()
+  const lis = () => {
+    fn()
+  }
+  client.addListener(lis)
+  client.invokeListener()
+  expect(fn).toBeCalledTimes(1)
+  client.removeListener(lis)
+  client.invokeListener()
+  expect(fn).toBeCalledTimes(1)
+  expect(remote.getListener()).toBeFalsy()
+})

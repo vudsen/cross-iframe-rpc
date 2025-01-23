@@ -10,7 +10,7 @@ function App() {
   const displayUrl = () => {
     (async () => {
       const tabs = await chrome.tabs.query({ currentWindow: true, active: true })
-      alert('Your current  tab url is:\n' + tabs[0].url)
+      alert('Your current tab url is:\n' + tabs[0].url)
     })()
   }
 

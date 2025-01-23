@@ -11,10 +11,8 @@ import createMessageSerializer from './serializer'
 import createMessageDeserializer from '@/bridge/deserializer'
 import createMessageSender from '@/bridge/sender'
 import { info } from '@/logger'
+import QuickLRU from 'quick-lru'
 
-type MyWeakKey = {
-  id: string
-}
 
 const createMessageBridge = (options: MessageBridgeOptions): MessageBridge => {
   const key = options.key ?? 'Default'
@@ -24,12 +22,11 @@ const createMessageBridge = (options: MessageBridgeOptions): MessageBridge => {
     serializer: serializer,
     poster: options.poster
   })
-  const peerCallbackCache = new WeakMap<MyWeakKey, Callable>()
+  const peerCallbackCache = new QuickLRU<string, Callable>({ maxSize: options.maxFunctionCacheSize ?? 50 })
 
   const deserializer = createMessageDeserializer({
     generateCallback: (peerId) => {
-      const key = { id: peerId }
-      const cached = peerCallbackCache.get(key)
+      const cached = peerCallbackCache.get(peerId)
       if (cached) {
         return cached
       }
@@ -39,7 +36,7 @@ const createMessageBridge = (options: MessageBridgeOptions): MessageBridge => {
           args
         })
       }
-      peerCallbackCache.set(key, func)
+      peerCallbackCache.set(peerId, func)
       return func
     }
   })

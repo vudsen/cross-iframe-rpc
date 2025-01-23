@@ -96,4 +96,8 @@ export interface MessageBridgeOptions {
    * 唯一的 key。当需要为多个对象创建桥梁时，需要指定不同的 Key
    */
   key: string
+  /**
+   * 最大函数缓存数量
+   */
+  maxFunctionCacheSize: number
 }

@@ -1,7 +1,8 @@
 import type { ListenerCallback, MessagePoster } from 'cross-iframe-rpc'
-import { createBridePeerClientWithTypeOnly, createBridgePeerClient } from 'cross-iframe-rpc'
+import { createBridePeerClientWithTypeOnly, createBridgePeerClient, setLoggerEnabled } from 'cross-iframe-rpc'
 
 export const createSimpleMessagePoster = () => {
+  setLoggerEnabled(false)
   const msgBoxACallbacks: ListenerCallback[] = []
   const msgBoxBCallbacks: ListenerCallback[] = []
 
@@ -45,6 +46,7 @@ export const createSimpleMessagePoster = () => {
 }
 
 export const createClientAndServer = <T> (remoteObj: T) => {
+  setLoggerEnabled(false)
   const { posterA, posterB } = createSimpleMessagePoster()
   const server = createBridgePeerClient({
     target: remoteObj,
