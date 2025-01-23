@@ -10,6 +10,7 @@ import type {
 import createMessageSerializer from './serializer'
 import createMessageDeserializer from '@/bridge/deserializer'
 import createMessageSender from '@/bridge/sender'
+import { info } from '@/logger'
 
 type MyWeakKey = {
   id: string
@@ -49,6 +50,7 @@ const createMessageBridge = (options: MessageBridgeOptions): MessageBridge => {
       return
     }
     const data = deserializer.deserialize(evt.data) as MessageBody<any>
+    info('RECEIVE', data)
     if (data.type && data.key === options.key) {
       handlerMap.get(data.type)?.handleMessage(data.data)
     }

@@ -1,4 +1,5 @@
 import { createBridePeerClientWithTypeOnly, createBridgePeerClient } from '@/core'
+import { setLoggerEnabled } from '@/logger'
 
 export type SetupInMainWindowOptions<T> = {
   iframe: HTMLIFrameElement
@@ -10,7 +11,7 @@ export const setupInMainWindow = <T> (options: SetupInMainWindowOptions<T>): T =
     target: options.delegateTarget,
     poster: {
       postMessage(str) {
-        window.parent.window.postMessage(str, '*')
+        options.iframe.contentWindow!.postMessage(str, '*')
       },
       addEventListener(name, callback) {
         window.addEventListener(name, (evt) => {
@@ -25,6 +26,8 @@ export const setupInMainWindow = <T> (options: SetupInMainWindowOptions<T>): T =
 }
 
 export const setupInIframe = <T> (): T => {
+  // No need to log twice.
+  setLoggerEnabled(false)
   return createBridePeerClientWithTypeOnly<T>({
     poster: {
       postMessage(str) {

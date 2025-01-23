@@ -1,6 +1,7 @@
 import type { MessageBody, MessageDispatchFunctionArgs, MessagePoster, Messages, MessageSender } from '@/bridge/type'
 import { deepCopy } from '@/util'
 import type { MessageSerializer } from '@/bridge/serializer'
+import { info } from '@/logger'
 
 
 
@@ -18,6 +19,7 @@ const createMessageSender = (options: SenderOptions): MessageSender => {
         data: args[1],
         key: options.key
       }
+      info('POST', body)
       options.poster.postMessage(options.serializer.serialise(deepCopy(body)))
     }
   }
