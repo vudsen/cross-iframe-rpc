@@ -28,7 +28,7 @@
 
 ## 快速开始
 
-[演示项目](https://github.com/IceOfSummer/cross-iframe-rpc/blob/master/example)
+[演示项目](https://github.com/IceOfSummer/iframe-chrome-extension-template)
 
 安装依赖:
 

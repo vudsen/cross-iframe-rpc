@@ -33,7 +33,7 @@ Listen for the `message` event in the main window and iframe, and use `postMessa
 
 ## Quick Start
 
-[Demo Project](https://github.com/IceOfSummer/cross-iframe-rpc/blob/master/example)
+[Demo Project](https://github.com/IceOfSummer/iframe-chrome-extension-template)
 
 Install dependency:
 
