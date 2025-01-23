@@ -4,7 +4,8 @@
   "description": "",
   "scripts": {
     "build": "node script/build.mjs",
-    "build:example": "node script/build-example.mjs"
+    "build:example": "node script/build-example.mjs",
+    "lint": "eslint --fix"
   },
   "keywords": [],
   "author": "",

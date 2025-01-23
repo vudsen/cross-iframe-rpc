@@ -12,7 +12,7 @@ export default tseslint.config({
       global: true
     },
   },
-  ignores: ['node_modules/**', 'dist/**'],
+  ignores: ['node_modules/**', 'dist/**', 'examples/**'],
   rules: {
     'quotes': ['error', 'single'],
     'key-spacing': ['error', { 'beforeColon': false }],
