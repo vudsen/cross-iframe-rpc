@@ -1,11 +1,11 @@
 // TODO support symbol.
 export interface Messages {
-  invoke: {
+  invokeRequest: {
     id: number
     path: Array<string | symbol>
     args: any[]
   },
-  invokeById: {
+  invokeFunctionByIdRequest: {
     id: string
     args: any[]
   },

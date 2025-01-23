@@ -31,7 +31,7 @@ const createMessageBridge = (options: MessageBridgeOptions): MessageBridge => {
         return cached
       }
       const func =  (...args: any[]) => {
-        sender.sendMessage('invokeById', {
+        sender.sendMessage('invokeFunctionByIdRequest', {
           id: peerId,
           args
         })

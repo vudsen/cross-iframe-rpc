@@ -52,8 +52,8 @@ export default class DefaultBridgeContext implements BridgeContext {
       }
     })
     this.bridge.addMessageHandler({
-      type: 'invokeById',
-      handleMessage: (data: Messages['invokeById']) =>{
+      type: 'invokeFunctionByIdRequest',
+      handleMessage: (data: Messages['invokeFunctionByIdRequest']) =>{
         const func = this.funcMapping.get(data.id)
         if (!func) {
           throw new Error('TODO')
@@ -62,8 +62,8 @@ export default class DefaultBridgeContext implements BridgeContext {
       }
     })
     this.bridge.addMessageHandler({
-      type: 'invoke',
-      handleMessage: (data: Messages['invoke']) => {
+      type: 'invokeRequest',
+      handleMessage: (data: Messages['invokeRequest']) => {
         let current = this.delegateTarget
         let last = null
         for (const p of data.path) {
@@ -149,7 +149,7 @@ export default class DefaultBridgeContext implements BridgeContext {
     const id = this.invokeId++
     return new Promise((resolve, reject) => {
       this.pendingPromise.set(id, { resolve, reject })
-      this.bridge.getMessageSender().sendMessage('invoke', {
+      this.bridge.getMessageSender().sendMessage('invokeRequest', {
         id,
         path: this.visitStackTrace,
         args,
