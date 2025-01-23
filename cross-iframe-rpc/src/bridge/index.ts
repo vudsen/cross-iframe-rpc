@@ -22,7 +22,7 @@ const createMessageBridge = (options: MessageBridgeOptions): MessageBridge => {
     serializer: serializer,
     poster: options.poster
   })
-  const peerCallbackCache = new QuickLRU<string, Callable>({ maxSize: options.maxFunctionCacheSize ?? 50 })
+  const peerCallbackCache = new QuickLRU<string, Callable>({ maxSize: options.maxFunctionCacheSize })
 
   const deserializer = createMessageDeserializer({
     generateCallback: (peerId) => {

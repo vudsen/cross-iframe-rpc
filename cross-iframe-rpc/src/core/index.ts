@@ -1,7 +1,7 @@
 import type { BridgeContext } from './proxy'
 import createProxy, { INTERNAL_RESOLVE_CTX_FUNC } from './proxy'
 import DefaultBridgeContext from './context'
-import type { MessagePoster } from '../bridge/type'
+import type { MessagePoster } from '@/bridge/type'
 
 
 export type ClientOptions<T> = {
@@ -41,7 +41,7 @@ export const accessProperty  = <T> (target: T): Promise<T> => {
   // @ts-expect-error target is undefined.
   const ctx = target[INTERNAL_RESOLVE_CTX_FUNC] as BridgeContext
   if (!ctx) {
-    throw new Error('Not a proxied object!')
+    return Promise.resolve(target)
   }
   return ctx.accessProperty()
 }

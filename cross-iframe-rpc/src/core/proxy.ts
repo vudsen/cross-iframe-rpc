@@ -1,7 +1,7 @@
 export interface BridgeContext {
   addAccessTrace(pathName: string | symbol, level: number): void
   invoke(args: any[]): Promise<any>
-  accessProperty(): any
+  accessProperty(): Promise<any>
 }
 
 
