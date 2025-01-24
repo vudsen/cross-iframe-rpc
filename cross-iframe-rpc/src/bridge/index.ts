@@ -30,6 +30,8 @@ const createMessageBridge = (options: MessageBridgeOptions): MessageBridge => {
         return cached
       }
       const func =  (...args: any[]) => {
+        // update rank.
+        peerCallbackCache.get(peerId)
         sender.sendMessage('invokeFunctionByIdRequest', {
           id: peerId,
           args
