@@ -3,8 +3,6 @@
   "version": "1.1.1",
   "description": "",
   "scripts": {
-    "build": "node script/build.mjs",
-    "build:example": "node script/build-example.mjs",
     "lint": "eslint --fix"
   },
   "keywords": [],
