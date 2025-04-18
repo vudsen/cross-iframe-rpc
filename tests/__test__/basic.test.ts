@@ -62,8 +62,9 @@ test('Test basic invoke', async () => {
 
 test('Test callback', (done) => {
   const remoteObj = {
-    callback: (cb: (s: string) => void, arg: string) => {
+    callback: async (cb: (s: string) => void, arg: string) => {
       cb(arg)
+      return Promise.resolve()
     }
   }
 
@@ -215,4 +216,25 @@ test('Test reference copy', async () => {
   client.b.f()
   fnA.f()
   expect(fn).toBeCalled()
+})
+
+/**
+ * Despite the remote function is not an async function, the client have to use `await` to pending the response.
+ */
+test('Test invoke non promise function', async () => {
+  const remoteObj = {
+    getValue: () => {
+      return 'hello'
+    },
+    getPromiseValue: () => {
+      return Promise.resolve('hello')
+    }
+  }
+
+  const { client } = createClientAndServer(remoteObj)
+
+  expect(await client.getValue()).toEqual('hello')
+  expect(client.getValue()).not.toEqual('hello')
+  expect(await client.getPromiseValue()).toEqual('hello')
+  return Promise.resolve()
 })
