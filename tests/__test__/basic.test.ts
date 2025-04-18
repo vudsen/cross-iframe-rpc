@@ -195,3 +195,24 @@ test('Test callback remove', async () => {
   expect(fn).toBeCalledTimes(1)
   expect(remote.getListener()).toBeFalsy()
 })
+
+
+test('Test reference copy', async () => {
+  const fn = jest.fn()
+  const remoteObj = {
+    a: {
+      f: () => {
+        fn()
+      }
+    },
+    b: {
+      f: () => {}
+    }
+  }
+  const { client } = createClientAndServer(remoteObj)
+
+  const fnA = client.a
+  client.b.f()
+  fnA.f()
+  expect(fn).toBeCalled()
+})

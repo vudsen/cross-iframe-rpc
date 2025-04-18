@@ -1,4 +1,5 @@
 import type { BridgeContext } from './proxy'
+import { INTERNAL_RESOLVE_CURRENT_PATH } from './proxy'
 import createProxy, { INTERNAL_RESOLVE_CTX_FUNC } from './proxy'
 import DefaultBridgeContext from './context'
 import type { MessagePoster } from '@/bridge/type'
@@ -43,5 +44,7 @@ export const accessProperty  = <T> (target: T): Promise<T> => {
   if (!ctx) {
     return Promise.resolve(target)
   }
-  return ctx.accessProperty()
+  // @ts-expect-error target is undefined.
+  const path = target[INTERNAL_RESOLVE_CURRENT_PATH] as Array<string | symbol>
+  return ctx.accessProperty(path)
 }
