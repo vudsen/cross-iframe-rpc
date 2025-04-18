@@ -34,7 +34,7 @@ jobs:
         run: pnpm run --recursive build && cd tests && pnpm run test
 
       - name: Publish to NPM
-        run: pnpm publish --recursive
+        run: pnpm publish --recursive --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
