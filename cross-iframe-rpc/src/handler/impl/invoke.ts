@@ -1,6 +1,7 @@
 import { registerHandler } from '@/handler/factory'
 import { isPromise } from '@/util'
 
+/// TODO: add timeout support
 registerHandler('invokeRequest', (data, ctx) => {
   let current = ctx.getDelegateTarget()
   let last = null
@@ -20,6 +21,11 @@ registerHandler('invokeRequest', (data, ctx) => {
         id: data.id,
         error: e
       })
+    })
+  } else {
+    ctx.getMessageBridge().getMessageSender().sendMessage('invokeResponse', {
+      id: data.id,
+      data: val
     })
   }
 })
