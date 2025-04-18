@@ -1,16 +1,16 @@
-name: Unit Test
+name: NPM Publish
 on:
-  push:
-    branches:
-      - master
-  pull_request:
-    types: [ synchronize, opened ]
-    branches:
-      - master
+  release:
+    types:
+      - released
+      - prereleased
 
 jobs:
-  test:
+  release:
+    name: Publish Package
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -32,3 +32,9 @@ jobs:
 
       - name: Run unit tests
         run: pnpm run --recursive build && cd tests && pnpm run test
+
+      - name: Publish to NPM
+        run: cd cross-iframe-rpc && pnpm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

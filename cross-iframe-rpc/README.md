@@ -1,7 +1,7 @@
 # cross-iframe-rpc
 
 - [中文文档](https://github.com/IceOfSummer/cross-iframe-rpc/blob/master/cross-iframe-rpc/README-zh.md)
-- [Example] (https://github.com/vudsen/iframe-chrome-extension-template)
+- [Example](https://github.com/vudsen/iframe-chrome-extension-template)
 
 
 Build a bridge between the iframe and the main window; it allows the iframe to cross-origin invoke functions in the main window.
