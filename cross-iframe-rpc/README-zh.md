@@ -2,6 +2,8 @@
 
 为 iframe 和主窗口建立"桥梁"，让 iframe 可以跨域调用主窗口的代码，类似于 RPC 调用, 但添加了回调支持.
 
+- [Example] (https://github.com/vudsen/iframe-chrome-extension-template)
+
 ## 它可以干什么?
 
 该项主要目意图是用于 chrome 拓展开发。在设置完成后，您可以在 iframe 内部直接调用 chrome API!
