@@ -76,7 +76,6 @@ export type TypeofEnum =
   | 'function';
 
 export type Callable = (...args: any[]) => any
-export type RegisterFunction = (func: Callable) => string
 
 export interface MessageBridgeOptions {
   poster: MessagePoster

@@ -15,14 +15,13 @@ type DefaultBridgeContextOptions = {
 export default class DefaultBridgeContext implements BridgeContext {
 
   private delegateTarget: Record<string | symbol, any>
-  private visitStackTrace: Array<string | symbol> = []
   // 不能直接使用 WeakMap，回调一般由远程的窗口保持强引用，自己本地是没有强引用的，所以可能导致本地的回调被回收
   private funcMapping
   private funcMappingToId = new WeakMap<Callable, string>()
   private pendingPromise = new Map<number, PromiseCallback>()
   private lastId = 1
   private invokeId = 0
-  private bridge: MessageBridge
+  private readonly bridge: MessageBridge
 
 
   constructor(options: DefaultBridgeContextOptions) {
@@ -72,31 +71,25 @@ export default class DefaultBridgeContext implements BridgeContext {
     return this.bridge
   }
 
-  accessProperty() {
+  accessProperty(path: Array<string | symbol>) {
     const id = this.invokeId++
     return new Promise((resolve, reject) => {
       this.pendingPromise.set(id, { resolve, reject })
       this.bridge.getMessageSender().sendMessage('accessPropertyRequest', {
         id,
-        path: this.visitStackTrace,
+        path,
       })
     })
   }
 
-  addAccessTrace(pathName: string | symbol, level: number): void {
-    while (this.visitStackTrace.length >= level) {
-      this.visitStackTrace.pop()
-    }
-    this.visitStackTrace.push(pathName)
-  }
 
-  invoke(args: any[]): Promise<any> {
+  invoke(path: Array<string | symbol>, args: any[]): Promise<any> {
     const id = this.invokeId++
     return new Promise((resolve, reject) => {
       this.pendingPromise.set(id, { resolve, reject })
       this.bridge.getMessageSender().sendMessage('invokeRequest', {
         id,
-        path: this.visitStackTrace,
+        path,
         args,
       })
     })
