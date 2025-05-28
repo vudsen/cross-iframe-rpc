@@ -1,5 +1,6 @@
 import { createBridePeerClientWithTypeOnly, createBridgePeerClient } from '@/core'
 import { setLoggerEnabled } from '@/logger'
+import { isPromise } from '@/util'
 
 export type SetupInMainWindowOptions<T> = {
   iframe: HTMLIFrameElement
@@ -43,4 +44,20 @@ export const setupInIframe = <T> (): T => {
       }
     }
   })
+}
+
+/**
+ * Try cast the result to a Promise.
+ * It's used for the non-async chrome api. Because of the bridge, the non-async turned into async. This makes us hard to code.
+ *
+ * So wrap the sync api with this function, to make it same in both production and development.
+ *
+ * Such as: `tryPromisify(chrome.i18n.getMessage('xxx')).then(translation => console.log(translation))`
+ * @param result
+ */
+export const tryPromisify = <T> (result: T): Promise<T> => {
+  if (isPromise(result)) {
+    return result as Promise<T>
+  }
+  return Promise.resolve(result)
 }
