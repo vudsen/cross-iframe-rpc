@@ -1,4 +1,4 @@
-import type { Callable } from '@/bridge/type'
+import type { Callable, SerializedError } from '@/bridge/type'
 import { UNDEFINED } from '@/bridge/type'
 
 type SerializerOptions = {
@@ -21,6 +21,13 @@ const createMessageSerializer = (options: SerializerOptions): MessageSerializer 
       return UNDEFINED
     }
     if (typeof arg === 'object') {
+      if (arg instanceof Error) {
+        const e: SerializedError = {
+          message: arg.message,
+          stack: arg.stack
+        }
+        return '$error$' + JSON.stringify(e)
+      }
       for (const key of Object.keys(arg)) {
         arg[key] = serialise0(arg[key])
       }

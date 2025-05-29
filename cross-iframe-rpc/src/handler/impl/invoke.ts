@@ -46,7 +46,7 @@ registerHandler('invokeResponse', (data, ctx) => {
     if (data.data) {
       promise.resolve(data.data)
     } else if (data.error) {
-      promise.reject(data.data)
+      promise.reject(data.error)
     } else {
       promise.resolve(data.data)
     }

@@ -26,6 +26,9 @@ export const deepCopy = <T> (target: T): T => {
     // @ts-expect-error value has copied
     return result
   } else if (typeof target === 'object') {
+    if (target instanceof Error) {
+      return target
+    }
     const result = {}
     Object.entries(target).forEach(([k, v]) => {
       // @ts-expect-error value has copied

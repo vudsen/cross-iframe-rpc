@@ -73,7 +73,8 @@ export type TypeofEnum =
   | 'bigint'
   | 'string'
   | 'symbol'
-  | 'function';
+  | 'function'
+  | 'error'
 
 export type Callable = (...args: any[]) => any
 
@@ -94,4 +95,9 @@ export interface MessageBridgeOptions {
    */
   maxFunctionCacheSize: number
   onMessage: <T extends keyof Messages>(callback: MessageBody<T>) => void
+}
+
+export type SerializedError = {
+  message: string
+  stack?: string
 }

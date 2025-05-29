@@ -1,4 +1,4 @@
-import type { Callable, TypeofEnum } from '@/bridge/type'
+import type { Callable, SerializedError, TypeofEnum } from '@/bridge/type'
 import { UNDEFINED } from '@/bridge/type'
 
 
@@ -57,6 +57,12 @@ const createMessageDeserializer = (options: DeserializerOptions) => {
       return value
     case 'boolean':
       return value === 'true'
+    case 'error': {
+      const serialized = JSON.parse(value) as SerializedError
+      const error = new Error(serialized.message)
+      error.stack = serialized.stack
+      return error
+    }
     default:
       // TODO 有用到剩下的类型再加
       throw new Error(`Unexpected type ${typeof arg}`)

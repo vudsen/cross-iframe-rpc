@@ -1,6 +1,7 @@
 import { expect, jest, test } from '@jest/globals'
 import { createBridgePeerClient, createBridePeerClientWithTypeOnly, accessProperty } from 'cross-iframe-rpc'
 import { createClientAndServer, createSimpleMessagePoster } from './__util__'
+import { fail } from 'node:assert'
 
 
 test('Test basic invoke', async () => {
@@ -237,4 +238,21 @@ test('Test invoke non promise function', async () => {
   expect(client.getValue()).not.toEqual('hello')
   expect(await client.getPromiseValue()).toEqual('hello')
   return Promise.resolve()
+})
+
+test('Test exception catch', async () => {
+  const errMsg = 'Test error'
+  const remoteObj = {
+    getValue: async () => {
+      throw new Error(errMsg)
+    }
+  }
+  const { client } = createClientAndServer(remoteObj)
+
+  try {
+    await client.getValue()
+    fail('Expected to throw an error')
+  } catch (e) {
+    expect((e as Error).message).toBe(errMsg)
+  }
 })
