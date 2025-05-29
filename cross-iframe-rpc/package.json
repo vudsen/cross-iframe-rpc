@@ -1,6 +1,6 @@
 {
   "name": "cross-iframe-rpc",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "A tool to help you develop a Chrome Extension page using your web dev server!",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
